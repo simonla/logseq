@@ -196,5 +196,6 @@
     chan))
 
 (defn new-block-id
+  "Doc string"
   []
   (d/squuid))

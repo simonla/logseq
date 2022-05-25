@@ -2,7 +2,7 @@ name: logseq graph-parser CI
 
 on:
   push:
-    branches: [master]
+    # branches: [master]
     paths:
       - 'deps/graph-parser/**'
       - '!deps/graph-parser/**.md'
