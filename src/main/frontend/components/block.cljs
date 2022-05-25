@@ -52,6 +52,7 @@
             [frontend.util.clock :as clock]
             [frontend.util.property :as property]
             [frontend.util.drawer :as drawer]
+            [frontend.util.text :as text-util]
             [logseq.graph-parser.config :as gp-config]
             [logseq.graph-parser.util :as gp-util]
             [logseq.graph-parser.mldoc :as gp-mldoc]
@@ -822,7 +823,7 @@
         (nil? metadata-show)
         (or
          (gp-config/local-asset? s)
-         (text/media-link? media-formats s)))
+         (text-util/media-link? media-formats s)))
        (true? (boolean metadata-show))))
 
      ;; markdown
@@ -831,7 +832,7 @@
      ;; image http link
      (and (or (string/starts-with? full-text "http://")
               (string/starts-with? full-text "https://"))
-          (text/media-link? media-formats s)))))
+          (text-util/media-link? media-formats s)))))
 
 (defn- relative-assets-path->absolute-path
   [path]
@@ -1110,7 +1111,7 @@
 (defn- macro-vimeo-cp
   [_config arguments]
   (when-let [url (first arguments)]
-    (when-let [vimeo-id (nth (util/safe-re-find text/vimeo-regex url) 5)]
+    (when-let [vimeo-id (nth (util/safe-re-find text-util/vimeo-regex url) 5)]
       (when-not (string/blank? vimeo-id)
         (let [width (min (- (util/get-width) 96)
                          560)
@@ -1130,7 +1131,7 @@
     (when-let [id (cond
                     (<= (count url) 15) url
                     :else
-                    (nth (util/safe-re-find text/bilibili-regex url) 5))]
+                    (nth (util/safe-re-find text-util/bilibili-regex url) 5))]
       (when-not (string/blank? id)
         (let [width (min (- (util/get-width) 96)
                          560)
@@ -1151,7 +1152,7 @@
     (let [width (min (- (util/get-width) 96)
                      560)
           height (int (* width (/ 315 560)))
-          results (text/get-matched-video url)
+          results (text-util/get-matched-video url)
           src (match results
                      [_ _ _ (:or "youtube.com" "youtu.be" "y2u.be") _ id _]
                      (if (= (count id) 11) ["youtube-player" id] url)
@@ -1299,7 +1300,7 @@
         (when-let [youtube-id (cond
                                 (== 11 (count url)) url
                                 :else
-                                (nth (util/safe-re-find text/youtube-regex url) 5))]
+                                (nth (util/safe-re-find text-util/youtube-regex url) 5))]
           (when-not (string/blank? youtube-id)
             (youtube/youtube-video youtube-id))))
 
@@ -2314,7 +2315,7 @@
   (let [refs (model/get-page-names-by-ids
               (->> (map :db/id refs)
                    (remove nil?)))]
-    (text/build-data-value refs)))
+    (text-util/build-data-value refs)))
 
 (defn- get-children-refs
   [children]
