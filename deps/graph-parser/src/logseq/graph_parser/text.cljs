@@ -226,6 +226,7 @@
   (atom #{"background-color" "background_color"}))
 
 (defn parse-property
+  "Doc string"
   ([k v config-state]
    (parse-property :markdown k v config-state))
   ([format k v config-state]
